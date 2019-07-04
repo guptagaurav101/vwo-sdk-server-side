@@ -1,4 +1,4 @@
-{   "name": "vwo",
+{   "name": "vwo/vwo",
     "description": "VWO server side sdk",
     "require": {
         "monolog/monolog": "1.0.*",
