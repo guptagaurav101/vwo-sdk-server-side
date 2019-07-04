@@ -9,9 +9,9 @@
         "phpunit/phpunit": "^8.2"
     },
     "autoload": {
-        "psr-4": {"src\\": "src"}
+        "classmap": ["src/"]
     },
     "autoload-dev": {
-        "psr-4": {"src\\": "tests"}
+         "classmap": ["src/"]
     },
 }
