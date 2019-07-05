@@ -27,7 +27,7 @@ Class VWO{
      * @param $settings
      * @param LoggerInterface|null $logger
      */
-    function __construct($settings,LoggerInterface $logger= null){
+    function __construct($config){
 
         $settings=isset($config['settings'])?$config['settings']:'';
         $logger=isset($config['logger'])?$config['logger']:null;
