@@ -1,5 +1,5 @@
 <?php
-namespace src\Logger;
+namespace vwo\Logger;
 use Monolog\Logger as Logger;
 use Monolog\Handler\StreamHandler;
 use Monolog\Formatter\LineFormatter;

@@ -1,6 +1,6 @@
 <?php
 
-namespace src\Error;
+namespace vwo\Error;
 
 /**
  * Base class for API exceptions. Used if failOnError is true.

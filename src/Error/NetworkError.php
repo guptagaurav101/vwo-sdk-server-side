@@ -1,6 +1,6 @@
 <?php
 
-namespace src\Error;
+namespace vwo\Error;
 
 /**
  * Raised if a network fault occurs.

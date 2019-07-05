@@ -1,6 +1,6 @@
 <?php
-namespace src;
-use src\Utils\murmur as murmur;
+namespace vwo;
+use vwo\Utils\murmur as murmur;
 
 Class BucketService{
 

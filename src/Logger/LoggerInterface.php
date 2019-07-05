@@ -1,5 +1,5 @@
 <?php
-namespace src\Logger;
+namespace vwo\Logger;
 interface LoggerInterface{
 	public function addLog($msg,$level);
 }

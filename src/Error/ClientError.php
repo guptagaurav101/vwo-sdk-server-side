@@ -1,6 +1,6 @@
 <?php
 
-namespace src\Error;
+namespace vwo\Error;
 
 /**
  * Raised when a client error (400+) is returned from the API.

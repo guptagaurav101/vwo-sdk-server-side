@@ -1,11 +1,11 @@
 <?php
-namespace src;
+namespace vwo;
 use \Exception as Exception;
 use Ramsey\Uuid\Provider\Node\FallbackNodeProvider;
-use src\Utils\Connection as Connection;
-use src\Utils\Validations as Validations;
-use src\Utils\Constants as Constants;
-use src\Logger\DefaultLogger as DefaultLogger;
+use vwo\Utils\Connection as Connection;
+use vwo\Utils\Validations as Validations;
+use vwo\Utils\Constants as Constants;
+use vwo\Logger\DefaultLogger as DefaultLogger;
 use Monolog\Logger as Logger;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;

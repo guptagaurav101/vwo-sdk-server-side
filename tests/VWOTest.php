@@ -1,5 +1,5 @@
 <?php
-namespace src;
+namespace vwo;
 include_once '/Applications/MAMP/htdocs/vwo/VWO/autoload.php';
 use PHPUnit\Framework\TestCase;
 final class VWOTest extends TestCase
