@@ -11,7 +11,7 @@ declare(strict_types=1);
  * @see http://sites.google.com/site/murmurhash/
  *
  */
-namespace src\Utils;
+namespace vwo\Utils;
 class Murmur {
   /**
    * @param  string $key   Text to hash.

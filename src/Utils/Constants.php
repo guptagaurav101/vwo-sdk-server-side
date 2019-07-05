@@ -1,5 +1,5 @@
 <?php
-namespace src\Utils;
+namespace vwo\Utils;
 class Constants{
     const BASE_URL       =   'https://dev.visualwebsiteoptimizer.com/server-side/';
     const SETTINGS_URL   =   self::BASE_URL.'settings';

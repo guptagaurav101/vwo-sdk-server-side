@@ -1,5 +1,5 @@
 <?php
-namespace src\Utils;
+namespace vwo\Utils;
 
 /**
  * HTTP connection.
