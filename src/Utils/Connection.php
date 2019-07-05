@@ -1,6 +1,10 @@
 <?php
 namespace vwo\Utils;
 
+use vwo\Error\ClientError;
+use vwo\Error\ServerError;
+use vwo\Error\NetworkError;
+
 /**
  * HTTP connection.
  */
