@@ -171,7 +171,7 @@ Class VWO{
             if($this->development_mode){
                 $response['status']='success';
             }else {
-                $response = $this->connection->get(Constants::TRACK_URL. $parameters);
+                $response = $this->connection->get(Constants::TRACK_URL, $parameters);
             }
             if( isset($response['status'])  && $response['status'] == 'success'){
                 return true;
