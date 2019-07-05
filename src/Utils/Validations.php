@@ -1,5 +1,5 @@
 <?php
-namespace src\Utils;
+namespace vwo\Utils;
 use JsonSchema\SchemaStorage;
 use JsonSchema\Validator as Validator;
 use JsonSchema\Constraints\Factory;
