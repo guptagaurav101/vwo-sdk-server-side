@@ -1,5 +1,7 @@
 <?php
 namespace vwo;
+use Monolog\Logger;
+use vwo\Utils\Constants;
 use vwo\Utils\murmur as murmur;
 
 Class BucketService{
@@ -8,6 +10,7 @@ Class BucketService{
     private static $MAX_VALUE=0x100000000;
     private static $MAX_RANGE=10000;
     private static $MAX_CAMPAIGN_TRAFFIC=100;
+    private static $CLASSNAME='vwo\BucketService';
 
     public static function getmurmurHash_Int($str){
         return $hash=Murmur::hash3_int($str, self::$SEED);
@@ -40,19 +43,32 @@ Class BucketService{
         return floor($weight * self::$MAX_RANGE/100);
     }
 
-    public static function getBucket($str,$campaign){
-        // if bucketing to be done
-        $bucketVal= self::getBucketVal($str,self::$MAX_CAMPAIGN_TRAFFIC);
-        if(!self::isUserPartofCampaign($bucketVal,$campaign['percentTraffic'])){
-            return null;
+    public static function getBucketVariationId($campaign,$variationName){
+        foreach ( $campaign['variations'] as $variation ) {
+            if($variation['name']==$variationName){
+                return ['name'=>$variation['name'],'id'=>$variation['id']];
+            }
+        }
+        return null;
 
+    }
+
+    public static function getBucket($userid,$campaign,$vwo){
+
+        // if bucketing to be done
+        $bucketVal= self::getBucketVal($userid,self::$MAX_CAMPAIGN_TRAFFIC);
+        if(!self::isUserPartofCampaign($bucketVal,$campaign['percentTraffic'])){
+            $vwo->addLog(Logger::ERROR,Constants::DEBUG_MESSAGES['USER_NOT_PART_OF_CAMPAIGN'],['{userId}'=>$userid,'{method}'=>'getBucket','{campaignTestKey}'=>$campaign['key']],self::$CLASSNAME);
+            return null;
         }
          $rangeForVariations=self::getRangeForVariations($bucketVal);
         foreach ( $campaign['variations'] as $variation ) {
             if($variation['max_range']>=$rangeForVariations && $rangeForVariations>=$variation['min_range']){
+                $vwo->addLog(Logger::ERROR,Constants::INFO_MESSAGES['GOT_VARIATION_FOR_USER'],['{variationName}'=>$variation['name'],'{userId}'=>$userid,'{method}'=>'getBucket','{campaignTestKey}'=>$campaign['key']],self::$CLASSNAME);
                 return $variatInfo=['name'=>$variation['name'],'id'=>$variation['id']];
             }
         }
+        $vwo->addLog(Logger::INFO,Constants::INFO_MESSAGES['NO_VARIATION_ALLOCATED'],['{userId}'=>$userid,'{campaignTestKey}'=>$campaign['key']],self::$CLASSNAME);
         return null;
     }
 }
