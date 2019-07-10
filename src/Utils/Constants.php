@@ -5,7 +5,7 @@ class Constants
 {
     const BASE_URL = 'https://dev.visualwebsiteoptimizer.com/server-side/';
     const SETTINGS_URL = self::BASE_URL . 'settings';
-    const GOAL_URL = self::BASE_URL . 'track-user';
+    const GOAL_URL = self::BASE_URL . 'track-goal';
     const TRACK_URL = self::BASE_URL . 'track-user';
 
 

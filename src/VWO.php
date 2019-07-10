@@ -122,7 +122,7 @@ Class VWO{
             if($campaign!==null){
                 $bucketInfo=BucketService::getBucket($customerHash,$campaign,$this);
                 $goalId=$this->getGoalId($campaign['goals'],$goal_name);
-                if($goalId) {
+                if($goalId &&  isset($bucketInfo['id']) &&  $bucketInfo['id']>0) {
                     $parameters = array(
                         'account_id' => $this->settings['accountId'],
                         'experiment_id' => $campaign['id'],
@@ -143,7 +143,6 @@ Class VWO{
                         return true;
                     }
                     $this->addLog(Logger::ERROR,Constants::ERROR_MESSAGE['IMPRESSION_FAILED'],['{endPoint}'=>'trackGoal']);
-                    $this->_logger->addLog('trackGoal api response is false ',Logger::ERROR);
                     $this->addLog(Logger::ERROR,Constants::ERROR_MESSAGE['TRACK_API_GOAL_NOT_FOUND'],['{campaignTestKey}'=>$campaign_name,'{userId}'=>$customerHash]);
 
                 }else{
