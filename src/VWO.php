@@ -142,7 +142,7 @@ Class VWO{
                     if( isset($response['status'])  && $response['status'] == 'success'){
                         return true;
                     }
-                    $this->addLog(Logger::ERROR,Constants::ERROR_MESSAGE['IMPRESSION_FAILED'],['{endPoint}'=>'trackGoal'])
+                    $this->addLog(Logger::ERROR,Constants::ERROR_MESSAGE['IMPRESSION_FAILED'],['{endPoint}'=>'trackGoal']);
                     $this->_logger->addLog('trackGoal api response is false ',Logger::ERROR);
                     $this->addLog(Logger::ERROR,Constants::ERROR_MESSAGE['TRACK_API_GOAL_NOT_FOUND'],['{campaignTestKey}'=>$campaign_name,'{userId}'=>$customerHash]);
 
@@ -199,7 +199,7 @@ Class VWO{
             if( isset($response['status'])  && $response['status'] == 'success'){
                 return true;
             }
-            $this->addLog(Logger::ERROR,Constants::ERROR_MESSAGE['IMPRESSION_FAILED'],['{endPoint}'=>'addvistior'])
+            $this->addLog(Logger::ERROR,Constants::ERROR_MESSAGE['IMPRESSION_FAILED'],['{endPoint}'=>'addvistior']);
 
         }catch(Exception $e){
             $this->addLog(Logger::ERROR, $e->getMessage());
