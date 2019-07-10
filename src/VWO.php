@@ -25,8 +25,8 @@ Class VWO{
 
     /**
      * VWO constructor.
-     * @param $settings
-     * @param LoggerInterface|null $logger
+     * @param $config
+     * @return object
      */
     function __construct($config){
         if(!is_array($config)){
@@ -73,7 +73,7 @@ Class VWO{
      * @param $sdk_key
      * @return bool|mixed
      */
-    public static function fetchsettings($account_id,$sdk_key){
+    public static function getSettings($account_id,$sdk_key){
         try{
             $connection = new Connection();
             $params = array(
@@ -112,7 +112,7 @@ Class VWO{
             throw new ExceptionaddLog('unable to fetch campaign data from settings in makeRanges function');
         }
     }
-    public function trackGoal($campaign_name='',$customerHash='',$goal_name=''){
+    public function track($campaign_name='',$customerHash='',$goal_name=''){
         try{
             if(empty($campaign_name)||empty($customerHash)||empty($goal_name)){
                 $this->addLog(Logger::ERROR,Constants::ERROR_MESSAGE['TRACK_API_MISSING_PARAMS']);
@@ -213,7 +213,7 @@ Class VWO{
      * @return null
      */
     public function activate($campaignName,$customerHash){
-        return $this->getVariant($campaignName,$customerHash,1);
+        return $this->getVariation($campaignName,$customerHash,1);
     }
 
     /**
@@ -222,7 +222,7 @@ Class VWO{
      * @param int $addVisitor
      * @return null| bucketname
      */
-    public function getVariant($campaignName,$customerHash,$addVisitor=0){
+    public function getVariation($campaignName,$customerHash,$addVisitor=0){
         $bucketInfo=null;
         try{
             // if campai
