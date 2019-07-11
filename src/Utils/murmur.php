@@ -1,5 +1,5 @@
 <?php
-declare(strict_types=1);
+//eclare(strict_types=1);
 /**
  * PHP Implementation of MurmurHash3
  *
@@ -18,7 +18,7 @@ class Murmur {
    * @param  number $seed  Positive integer only
    * @return number 32-bit positive integer hash
    */
-  public static function hash3_int(string $key, int $seed=0) : int {
+  public static function hash3_int($key, $seed) {
     $key  = array_values(unpack('C*', $key));
     $klen = count($key);
     $h1   = $seed < 0 ? -$seed : $seed;
@@ -60,7 +60,7 @@ class Murmur {
    * @param  number $seed  Positive integer only
    * @return string
    */
-  public static function hash3(string $key, int $seed=0) : string {
+  public static function hash3($key, $seed) {
     return base_convert(sprintf("%u\n", self::hash3_int($key, $seed)), 10, 32);
   }
 }
