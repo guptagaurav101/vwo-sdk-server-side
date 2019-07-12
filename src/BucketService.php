@@ -18,6 +18,7 @@ Class BucketService{
 
     public static function getBucketVal($str,$maxPercent){
         $code=self::getmurmurHash_Int($str);
+
         $range = $code / self::$MAX_VALUE;
 
         if ($range < 0) {
@@ -34,9 +35,9 @@ Class BucketService{
         }
         return TRUE;
     }
-    private static function getRangeForVariations($range){
+    private static function getRangeForVariations($range,$multiplier){
 
-        return  intval(floor($range * self::$MAX_RANGE));
+        return  intval(floor(($range*self::$MAX_RANGE)+1)*$multiplier);
     }
 
     public static function getLimit($weight){
@@ -52,6 +53,10 @@ Class BucketService{
         return null;
 
     }
+    public static function getMultiplier($traffic){
+        return self::$MAX_CAMPAIGN_TRAFFIC/($traffic);
+
+    }
 
     public static function getBucket($userid,$campaign,$vwo){
 
@@ -61,7 +66,8 @@ Class BucketService{
             $vwo->addLog(Logger::ERROR,Constants::DEBUG_MESSAGES['USER_NOT_PART_OF_CAMPAIGN'],['{userId}'=>$userid,'{method}'=>'getBucket','{campaignTestKey}'=>$campaign['key']],self::$CLASSNAME);
             return null;
         }
-         $rangeForVariations=self::getRangeForVariations($bucketVal);
+        $multiplier=self::getMultiplier($campaign['percentTraffic']);
+        $rangeForVariations=self::getRangeForVariations($bucketVal,$multiplier);
         foreach ( $campaign['variations'] as $variation ) {
             if($variation['max_range']>=$rangeForVariations && $rangeForVariations>=$variation['min_range']){
                 $vwo->addLog(Logger::ERROR,Constants::INFO_MESSAGES['GOT_VARIATION_FOR_USER'],['{variationName}'=>$variation['name'],'{userId}'=>$userid,'{method}'=>'getBucket','{campaignTestKey}'=>$campaign['key']],self::$CLASSNAME);

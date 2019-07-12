@@ -299,7 +299,7 @@ Class VWO{
      */
     private function getUUId5($userid,$accountId){
         try {
-            $uuid5_seed = Uuid::uuid5(Uuid::NAMESPACE_DNS, $this->uuid_seed);
+            $uuid5_seed = Uuid::uuid5(Uuid::NAMESPACE_URL, $this->uuid_seed);
             $uuid5_seed_accountId = Uuid::uuid5($uuid5_seed, $accountId);
             $uuid5 = Uuid::uuid5($uuid5_seed_accountId, $userid);
             $uuid= strtoupper(str_replace('-','',$uuid5->toString()));
