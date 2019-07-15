@@ -11,8 +11,10 @@ use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
 /***
+ * VWO class for clients to connect the sdk
+ *
  * Class VWO
- * @package src
+ * @package vwo
  */
 Class VWO{
     var $uuid_seed='https://vwo.com';
@@ -24,7 +26,7 @@ Class VWO{
 
 
     /**
-     * VWO constructor.
+     * VWO constructor for the VWO sdk.
      * @param $config
      * @return object
      */
@@ -33,22 +35,25 @@ Class VWO{
             $this->addLog(Logger::ERROR,Constants::ERROR_MESSAGE['INVALID_CONFIGURATION']);
             return (object)[];
         }
-
+        // is settings and logger files are provided then set the values to the object
         $settings=isset($config['settings'])?$config['settings']:'';
         $logger=isset($config['logger'])?$config['logger']:null;
+        // dev mode enable wont send tracking hits to the servers
         $this->development_mode=(isset($config['development_mode']) && $config['development_mode']== 1)?1:0;
-
         if($logger== null){
             $this->_logger= new DefaultLogger(Logger::DEBUG,'/var/log/php_errors.log'); //stdout
         }else{
             $this->_logger=$logger;
             $this->addLog(Logger::DEBUG,Constants::DEBUG_MESSAGES['CUSTOM_LOGGER_USED']);
         }
+        // user profile service
         if(isset($config['userProfileService']) and is_object($config['userProfileService'])){
             $this->_userProfileObj=clone($config['userProfileService']);
         }else{
             $this->_userProfileObj='';
         }
+
+        // inital logging started for each new object
         $this->addLog(Logger::DEBUG,Constants::DEBUG_MESSAGES['SET_DEVELOPMENT_MODE'],['{devmode}'=>$this->development_mode]);
 
         $res=Validations::checkSettingSchema($settings);
@@ -69,6 +74,9 @@ Class VWO{
     }
 
     /***
+     *
+     * method to get the settings from the server
+     *
      * @param $account_id
      * @param $sdk_key
      * @return bool|mixed
@@ -92,6 +100,7 @@ Class VWO{
     }
 
     /**
+     *
      *
      */
     private function makeRanges()
@@ -140,6 +149,7 @@ Class VWO{
                         $response = $this->connection->get(Constants::GOAL_URL, $parameters);
                     }
                     if( isset($response['status'])  && $response['status'] == 'success'){
+                        $this->addLog(Logger::ERROR,Constants::DEBUG_MESSAGES['IMPRESSION_FOR_TRACK_GOAL'],['{properties}'=>json_decode($parameters)]);
                         return true;
                     }
                     $this->addLog(Logger::ERROR,Constants::ERROR_MESSAGE['IMPRESSION_FAILED'],['{endPoint}'=>'trackGoal']);
