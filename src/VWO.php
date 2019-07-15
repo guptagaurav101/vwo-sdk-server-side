@@ -206,6 +206,7 @@ Class VWO{
                 $response = $this->connection->get(Constants::TRACK_URL, $parameters);
             }
             if( isset($response['status'])  && $response['status'] == 'success'){
+                $this->addLog(Logger::ERROR,Constants::DEBUG_MESSAGES['IMPRESSION_FOR_TRACK_USER'],['{properties}'=>json_decode($parameters)]);
                 return true;
             }
             $this->addLog(Logger::ERROR,Constants::ERROR_MESSAGE['IMPRESSION_FAILED'],['{endPoint}'=>'addvistior']);
