@@ -149,7 +149,7 @@ Class VWO{
                         $response = $this->connection->get(Constants::GOAL_URL, $parameters);
                     }
                     if( isset($response['status'])  && $response['status'] == 'success'){
-                        $this->addLog(Logger::ERROR,Constants::DEBUG_MESSAGES['IMPRESSION_FOR_TRACK_GOAL'],['{properties}'=>json_decode($parameters)]);
+                        $this->addLog(Logger::ERROR,Constants::DEBUG_MESSAGES['IMPRESSION_FOR_TRACK_GOAL'],['{properties}'=>json_encode($parameters)]);
                         return true;
                     }
                     $this->addLog(Logger::ERROR,Constants::ERROR_MESSAGE['IMPRESSION_FAILED'],['{endPoint}'=>'trackGoal']);
@@ -206,7 +206,7 @@ Class VWO{
                 $response = $this->connection->get(Constants::TRACK_URL, $parameters);
             }
             if( isset($response['status'])  && $response['status'] == 'success'){
-                $this->addLog(Logger::ERROR,Constants::DEBUG_MESSAGES['IMPRESSION_FOR_TRACK_USER'],['{properties}'=>json_decode($parameters)]);
+                $this->addLog(Logger::ERROR,Constants::DEBUG_MESSAGES['IMPRESSION_FOR_TRACK_USER'],['{properties}'=>json_encode($parameters)]);
                 return true;
             }
             $this->addLog(Logger::ERROR,Constants::ERROR_MESSAGE['IMPRESSION_FAILED'],['{endPoint}'=>'addvistior']);
