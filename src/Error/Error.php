@@ -3,7 +3,7 @@
 namespace vwo\Error;
 
 /**
- * Base class for API exceptions. Used if failOnError is true.
+ * Base class for API exceptions. Used if failOnError is TRUE.
  */
 class Error extends \Exception
 {

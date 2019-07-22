@@ -36,12 +36,7 @@ static  $jsonSchemaObject = [
 
 
                         ];
-    public static function makelogMesaage($message,$params,$className){
-        $params['{file}']=$className;
-        $response = str_replace(array_keys($params), array_values($params), $message);
-        return $response;
 
-    }
 
     public static function checkSettingSchema($request){
         $schemaStorage = new SchemaStorage();

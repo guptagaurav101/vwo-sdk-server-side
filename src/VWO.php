@@ -7,7 +7,9 @@
 
 namespace vwo;
 use \Exception as Exception;
+use vwo\Logger\LoggerInterface;
 use vwo\Utils\Connection as Connection;
+use vwo\Utils\UserProfileInterface;
 use vwo\Utils\Validations as Validations;
 use vwo\Utils\Constants as Constants;
 use vwo\Utils\Common as Common;
@@ -52,12 +54,12 @@ Class VWO
         $this->development_mode=(isset($config['development_mode']) && $config['development_mode']== 1)?1:0;
         if ($logger== null) {
             $this->_logger = new DefaultLogger(Logger::DEBUG, '/var/log/php_errors.log'); //stdout
-        } else {
+        } elseif($logger instanceof LoggerInterface) {
             $this->_logger=$logger;
             $this->addLog(Logger::DEBUG, Constants::DEBUG_MESSAGES['CUSTOM_LOGGER_USED']);
         }
         // user profile service
-        if(isset($config['userProfileService']) and is_object($config['userProfileService'])) {
+        if(isset($config['userProfileService']) and ($config['userProfileService'] instanceof UserProfileInterface)) {
             $this->_userProfileObj=clone($config['userProfileService']);
         }else{
             $this->_userProfileObj='';
@@ -104,9 +106,9 @@ Class VWO
             );
             return $settings = $connection->get(Constants::SETTINGS_URL, $params);
         }catch(Exception $e){
-            return false;
+            return FALSE;
         }
-        return false;
+        return FALSE;
 
     }
 
@@ -137,7 +139,7 @@ Class VWO
         try{
             if(empty($campaign_name)||empty($userId)||empty($goalName)) {
                 $this->addLog(Logger::ERROR, Constants::ERROR_MESSAGE['TRACK_API_MISSING_PARAMS']);
-                return false;
+                return FALSE;
             }
             $campaign=$this->validateCampaignName($campaign_name);
             if($campaign!==null) {
@@ -163,7 +165,7 @@ Class VWO
                     }
                     if(isset($response['status'])  && $response['status'] == 'success') {
                         $this->addLog(Logger::ERROR, Constants::DEBUG_MESSAGES['IMPRESSION_FOR_TRACK_GOAL'], ['{properties}'=>json_encode($parameters)]);
-                        return true;
+                        return TRUE;
                     }
                     $this->addLog(Logger::ERROR, Constants::ERROR_MESSAGE['IMPRESSION_FAILED'], ['{endPoint}'=>'trackGoal']);
                     $this->addLog(Logger::ERROR, Constants::ERROR_MESSAGE['TRACK_API_GOAL_NOT_FOUND'], ['{campaignTestKey}'=>$campaign_name,'{userId}'=>$userId]);
@@ -175,7 +177,7 @@ Class VWO
         }catch(Exception $e){
             $this->addLog(Logger::ERROR, $e->getMessage());
         }
-        return false;
+        return FALSE;
     }
 
     /**
@@ -222,7 +224,7 @@ Class VWO
             }
             if(isset($response['status'])  && $response['status'] == 'success') {
                 $this->addLog(Logger::ERROR, Constants::DEBUG_MESSAGES['IMPRESSION_FOR_TRACK_USER'], ['{properties}'=>json_encode($parameters)]);
-                return true;
+                return TRUE;
             }
             $this->addLog(Logger::ERROR, Constants::ERROR_MESSAGE['IMPRESSION_FAILED'], ['{endPoint}'=>'addvistior']);
 
@@ -230,7 +232,7 @@ Class VWO
             $this->addLog(Logger::ERROR, $e->getMessage());
 
         }
-        return false;
+        return FALSE;
     }
 
     /**
@@ -376,7 +378,7 @@ Class VWO
         }catch (Exception $e){
             error_log($e->getMessage());
         }
-        return true;
+        return TRUE;
 
     }
 }

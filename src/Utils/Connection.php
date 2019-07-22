@@ -46,13 +46,13 @@ class Connection
     /**
      * @var boolean
      */
-    private $failOnError = false;
+    private $failOnError = FALSE;
     /**
      * Manually follow location redirects. Used if CURLOPT_FOLLOWLOCATION
      * is unavailable due to open_basedir restriction.
      * @var boolean
      */
-    private $followLocation = false;
+    private $followLocation = FALSE;
     /**
      * Maximum number of redirects to try.
      * @var int
@@ -65,13 +65,13 @@ class Connection
     private $redirectsFollowed = 0;
     /**
      * Deal with failed requests if failOnError is not set.
-     * @var string|false
+     * @var string|FALSE
      */
-    private $lastError = false;
+    private $lastError = FALSE;
     /**
      * Determines whether the response body should be returned as a raw string.
      */
-    private $rawResponse = false;
+    private $rawResponse = FALSE;
     /**
      * Determines the default content type to use with requests and responses.
      */
@@ -90,26 +90,26 @@ class Connection
         // Set to a blank string to make cURL include all encodings it can handle (gzip, deflate, identity) in the 'Accept-Encoding' request header and respect the 'Content-Encoding' response header
         curl_setopt($this->curl, CURLOPT_ENCODING, '');
         if (!ini_get("open_basedir")) {
-            curl_setopt($this->curl, CURLOPT_FOLLOWLOCATION, true);
+            curl_setopt($this->curl, CURLOPT_FOLLOWLOCATION, TRUE);
         } else {
-            $this->followLocation = true;
+            $this->followLocation = TRUE;
         }
         $this->setTimeout(60);
     }
     /**
      * Controls whether requests and responses should be treated
-     * as XML. Defaults to false (using JSON).
+     * as XML. Defaults to FALSE (using JSON).
      *
      * @param bool $option the new state of this feature
      */
-    public function useXml($option = true)
+    public function useXml($option = TRUE)
     {
         if ($option) {
             $this->contentType = self::MEDIA_TYPE_XML;
-            $this->rawResponse = true;
+            $this->rawResponse = TRUE;
         } else {
             $this->contentType = self::MEDIA_TYPE_JSON;
-            $this->rawResponse = false;
+            $this->rawResponse = FALSE;
         }
     }
     /**
@@ -118,7 +118,7 @@ class Connection
      *
      * @param bool $option the new state of this feature
      */
-    public function useUrlEncoded($option = true)
+    public function useUrlEncoded($option = TRUE)
     {
         if ($option) {
             $this->contentType = self::MEDIA_TYPE_WWW;
@@ -139,7 +139,7 @@ class Connection
      *
      * @param bool $option the new state of this feature
      */
-    public function failOnError($option = true)
+    public function failOnError($option = TRUE)
     {
         $this->failOnError = $option;
     }
@@ -181,7 +181,7 @@ class Connection
      * @param string $server
      * @param int|bool $port optional port number
      */
-    public function useProxy($server, $port = false)
+    public function useProxy($server, $port = FALSE)
     {
         curl_setopt($this->curl, CURLOPT_PROXY, $server);
         if ($port) {
@@ -192,7 +192,7 @@ class Connection
      * @todo may need to handle CURLOPT_SSL_VERIFYHOST and CURLOPT_CAINFO as well
      * @param boolean
      */
-    public function verifyPeer($option = false)
+    public function verifyPeer($option = FALSE)
     {
         curl_setopt($this->curl, CURLOPT_SSL_VERIFYPEER, $option);
     }
@@ -232,17 +232,17 @@ class Connection
     {
         $this->responseBody = '';
         $this->responseHeaders = array();
-        $this->lastError = false;
+        $this->lastError = FALSE;
         $this->addHeader('Accept', $this->getContentType());
-        curl_setopt($this->curl, CURLOPT_POST, false);
-        curl_setopt($this->curl, CURLOPT_PUT, false);
-        curl_setopt($this->curl, CURLOPT_HTTPGET, false);
+        curl_setopt($this->curl, CURLOPT_POST, FALSE);
+        curl_setopt($this->curl, CURLOPT_PUT, FALSE);
+        curl_setopt($this->curl, CURLOPT_HTTPGET, FALSE);
         curl_setopt($this->curl, CURLOPT_HTTPHEADER, $this->headers);
     }
     /**
      * Check the response for possible errors and handle the response body returned.
      *
-     * If failOnError is true, a client or server error is raised, otherwise returns false
+     * If failOnError is TRUE, a client or server error is raised, otherwise returns FALSE
      * on error.
      */
     private function handleResponse()
@@ -257,14 +257,14 @@ class Connection
                 throw new ClientError($body, $status);
             } else {
                 $this->lastError = $body;
-                return false;
+                return FALSE;
             }
         } elseif ($status >= 500 && $status <= 599) {
             if ($this->failOnError) {
                 throw new ServerError($body, $status);
             } else {
                 $this->lastError = $body;
-                return false;
+                return FALSE;
             }
         }
         if ($this->followLocation) {
@@ -273,7 +273,7 @@ class Connection
         return $body;
     }
     /**
-     * Return an representation of an error returned by the last request, or false
+     * Return an representation of an error returned by the last request, or FALSE
      * if the last request was not an error.
      */
     public function getLastError()
@@ -317,7 +317,7 @@ class Connection
      *
      * @return mixed
      */
-    public function get($url, $query = false)
+    public function get($url, $query = FALSE)
     {
         $this->initializeRequest();
         if (is_array($query)) {
@@ -325,9 +325,9 @@ class Connection
         }
         curl_setopt($this->curl, CURLOPT_CUSTOMREQUEST, 'GET');
         curl_setopt($this->curl, CURLOPT_URL, $url);
-        curl_setopt($this->curl, CURLOPT_POST, false);
-        curl_setopt($this->curl, CURLOPT_PUT, false);
-        curl_setopt($this->curl, CURLOPT_HTTPGET, true);
+        curl_setopt($this->curl, CURLOPT_POST, FALSE);
+        curl_setopt($this->curl, CURLOPT_PUT, FALSE);
+        curl_setopt($this->curl, CURLOPT_HTTPGET, TRUE);
         curl_exec($this->curl);
         return $this->handleResponse();
     }
@@ -348,9 +348,9 @@ class Connection
         $this->initializeRequest();
         curl_setopt($this->curl, CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($this->curl, CURLOPT_URL, $url);
-        curl_setopt($this->curl, CURLOPT_POST, true);
-        curl_setopt($this->curl, CURLOPT_PUT, false);
-        curl_setopt($this->curl, CURLOPT_HTTPGET, false);
+        curl_setopt($this->curl, CURLOPT_POST, TRUE);
+        curl_setopt($this->curl, CURLOPT_PUT, FALSE);
+        curl_setopt($this->curl, CURLOPT_HTTPGET, FALSE);
         curl_setopt($this->curl, CURLOPT_POSTFIELDS, $body);
         curl_exec($this->curl);
         return $this->handleResponse();
@@ -366,7 +366,7 @@ class Connection
         $this->initializeRequest();
         curl_setopt($this->curl, CURLOPT_CUSTOMREQUEST, 'HEAD');
         curl_setopt($this->curl, CURLOPT_URL, $url);
-        curl_setopt($this->curl, CURLOPT_NOBODY, true);
+        curl_setopt($this->curl, CURLOPT_NOBODY, TRUE);
         curl_exec($this->curl);
         return $this->handleResponse();
     }
@@ -394,9 +394,9 @@ class Connection
         curl_setopt($this->curl, CURLOPT_INFILESIZE, strlen($body));
         curl_setopt($this->curl, CURLOPT_CUSTOMREQUEST, 'PUT');
         curl_setopt($this->curl, CURLOPT_URL, $url);
-        curl_setopt($this->curl, CURLOPT_HTTPGET, false);
-        curl_setopt($this->curl, CURLOPT_POST, false);
-        curl_setopt($this->curl, CURLOPT_PUT, true);
+        curl_setopt($this->curl, CURLOPT_HTTPGET, FALSE);
+        curl_setopt($this->curl, CURLOPT_POST, FALSE);
+        curl_setopt($this->curl, CURLOPT_PUT, TRUE);
         curl_exec($this->curl);
         fclose($handle);
         curl_setopt($this->curl, CURLOPT_INFILE, STDIN);
@@ -411,9 +411,9 @@ class Connection
     public function delete($url)
     {
         $this->initializeRequest();
-        curl_setopt($this->curl, CURLOPT_PUT, false);
-        curl_setopt($this->curl, CURLOPT_HTTPGET, false);
-        curl_setopt($this->curl, CURLOPT_POST, false);
+        curl_setopt($this->curl, CURLOPT_PUT, FALSE);
+        curl_setopt($this->curl, CURLOPT_HTTPGET, FALSE);
+        curl_setopt($this->curl, CURLOPT_POST, FALSE);
         curl_setopt($this->curl, CURLOPT_CUSTOMREQUEST, 'DELETE');
         curl_setopt($this->curl, CURLOPT_URL, $url);
         curl_exec($this->curl);
