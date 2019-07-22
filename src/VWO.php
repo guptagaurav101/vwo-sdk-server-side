@@ -25,7 +25,7 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
  */
 Class VWO
 {
-    var $uuidSseed=Constants::UUID_SEED;
+    var $uuidSeed=Constants::UUID_SEED;
     var $settings='';
     var $connection;
     var $_logger;
@@ -329,7 +329,7 @@ Class VWO
     private function getUUId5($userId,$accountId)
     {
         try {
-            $uuid5_seed = Uuid::uuid5(Uuid::NAMESPACE_URL, $this->$uuidSseed);
+            $uuid5_seed = Uuid::uuid5(Uuid::NAMESPACE_URL, $this->uuidSeed);
             $uuid5_seed_accountId = Uuid::uuid5($uuid5_seed, $accountId);
             $uuid5 = Uuid::uuid5($uuid5_seed_accountId, $userId);
             $uuid= strtoupper(str_replace('-', '', $uuid5->toString()));
