@@ -7,6 +7,7 @@ class Constants
     const SETTINGS_URL = self::BASE_URL . 'settings';
     const GOAL_URL = self::BASE_URL . 'track-goal';
     const TRACK_URL = self::BASE_URL . 'track-user';
+    const UUID_SEED='https://vwo.com';
 
 
     const DEBUG_MESSAGES = [
