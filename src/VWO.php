@@ -134,33 +134,33 @@ Class VWO
             throw new ExceptionaddLog('unable to fetch campaign data from settings in makeRanges function');
         }
     }
-    public function track($campaign_name='',$userId='',$goalName='',$revenue='')
+    public function track($campaignKey='',$userId='',$goalName='',$revenue='')
     {
         try{
-            if(empty($campaign_name)||empty($userId)||empty($goalName)) {
+            if(empty($campaignKey)||empty($userId)||empty($goalName)) {
                 $this->addLog(Logger::ERROR, Constants::ERROR_MESSAGE['TRACK_API_MISSING_PARAMS']);
                 return FALSE;
             }
-            $campaign=$this->validateCampaignName($campaign_name);
+            $campaign=$this->validateCampaignName($campaignKey);
             if($campaign!==null) {
                 $bucketInfo=BucketService::getBucket($userId, $campaign, $this);
                 $goalId=$this->getGoalId($campaign['goals'], $goalName);
                 if($goalId &&  isset($bucketInfo['id']) &&  $bucketInfo['id']>0) {
-                    $parameters = array(
-                        'account_id' => $this->settings['accountId'],
-                        'experiment_id' => $campaign['id'],
-                        'ap' => 'server',
-                        'uId' => $userId,
-                        'combination' => $bucketInfo['id'],
-                        'random' => rand(0, 1),
-                        'sId' => time(),
-                        'u' => $this->getUUId5($userId, $this->settings['accountId']),
-                        'goal_id' => $goalId,
-                        'r'=>is_string($revenue) || is_float($revenue) || is_int($revenue)?$revenue:''
-                    );
                     if($this->development_mode) {
                         $response['status']='success';
                     }else {
+                        $parameters = array(
+                            'account_id' => $this->settings['accountId'],
+                            'experiment_id' => $campaign['id'],
+                            'ap' => 'server',
+                            'uId' => $userId,
+                            'combination' => $bucketInfo['id'],
+                            'random' => rand(0, 1),
+                            'sId' => time(),
+                            'u' => $this->getUUId5($userId, $this->settings['accountId']),
+                            'goal_id' => $goalId,
+                            'r'=>is_string($revenue) || is_float($revenue) || is_int($revenue)?$revenue:''
+                        );
                         $response = $this->connection->get(Constants::GOAL_URL, $parameters);
                     }
                     if(isset($response['status'])  && $response['status'] == 'success') {
@@ -168,10 +168,10 @@ Class VWO
                         return TRUE;
                     }
                     $this->addLog(Logger::ERROR, Constants::ERROR_MESSAGE['IMPRESSION_FAILED'], ['{endPoint}'=>'trackGoal']);
-                    $this->addLog(Logger::ERROR, Constants::ERROR_MESSAGE['TRACK_API_GOAL_NOT_FOUND'], ['{campaignTestKey}'=>$campaign_name,'{userId}'=>$userId]);
+                    $this->addLog(Logger::ERROR, Constants::ERROR_MESSAGE['TRACK_API_GOAL_NOT_FOUND'], ['{campaignTestKey}'=>$campaignKey,'{userId}'=>$userId]);
 
                 }else{
-                    $this->addLog(Logger::ERROR, Constants::ERROR_MESSAGE['TRACK_API_GOAL_NOT_FOUND'], ['{campaignTestKey}'=>$campaign_name,'{userId}'=>$userId]);
+                    $this->addLog(Logger::ERROR, Constants::ERROR_MESSAGE['TRACK_API_GOAL_NOT_FOUND'], ['{campaignTestKey}'=>$campaignKey,'{userId}'=>$userId]);
                 }
             }
         }catch(Exception $e){
@@ -206,20 +206,21 @@ Class VWO
     private function addVisitor($campaign,$userId,$varientId)
     {
         try{
-            $parameters=array(
-                'account_id'=>$this->settings['accountId'],
-                'experiment_id'=>$campaign['id'],
-                'ap'=>'server',
-                'uId'=>$userId,
-                'combination'=>$varientId, // variation id
-                'random'=>rand(0, 1),
-                'sId'=>time(),
-                'u'=>$this->getUUId5($userId, $this->settings['accountId']),
-                'ed'=>'{“p”:“server”}',
-            );
             if($this->development_mode) {
                 $response['status']='success';
             }else {
+                $parameters=array(
+                    'account_id'=>$this->settings['accountId'],
+                    'experiment_id'=>$campaign['id'],
+                    'ap'=>'server',
+                    'uId'=>$userId,
+                    'combination'=>$varientId, // variation id
+                    'random'=>rand(0, 1),
+                    'sId'=>time(),
+                    'u'=>$this->getUUId5($userId, $this->settings['accountId']),
+                    'ed'=>'{“p”:“server”}',
+                );
+
                 $response = $this->connection->get(Constants::TRACK_URL, $parameters);
             }
             if(isset($response['status'])  && $response['status'] == 'success') {
@@ -236,35 +237,35 @@ Class VWO
     }
 
     /**
-     * @param  $campaignName
+     * @param  $campaignKey
      * @param  $customerHash
      * @return null
      */
-    public function activate($campaignName,$userId)
+    public function activate($campaignKey,$userId)
     {
-        return $this->getVariation($campaignName, $userId, 1);
+        return $this->getVariation($campaignKey, $userId, 1);
     }
 
     /**
-     * @param  $campaignName
+     * @param  $campaignKey
      * @param  $customerHash
      * @param  int          $addVisitor
      * @return null| bucketname
      */
-    public function getVariation($campaignName,$userId,$addVisitor=0)
+    public function getVariation($campaignKey,$userId,$addVisitor=0)
     {
         $bucketInfo=null;
         try{
             // if campai
-            $campaign=$this->validateCampaignName($campaignName);
+            $campaign=$this->validateCampaignName($campaignKey);
             if($campaign!==null) {
 
                 try{
                     if(!empty($this->_userProfileObj)) {
-                        $variationInfo=$this->_userProfileObj->lookup($userId, $campaignName);
-                        if(isset($variationInfo[$campaignName]['variationName']) && is_string($variationInfo[$campaignName]['variationName'])&& !empty($variationInfo[$campaignName]['variationName']) ) {
+                        $variationInfo=$this->_userProfileObj->lookup($userId, $campaignKey);
+                        if(isset($variationInfo[$campaignKey]['variationName']) && is_string($variationInfo[$campaignKey]['variationName'])&& !empty($variationInfo[$campaignKey]['variationName']) ) {
                             $this->addLog(Logger::INFO, Constants::INFO_MESSAGES['LOOKING_UP_USER_PROFILE_SERVICE']);
-                            $bucketInfo=BucketService::getBucketVariationId($campaign, $variationInfo[$campaignName]['variationName']);
+                            $bucketInfo=BucketService::getBucketVariationId($campaign, $variationInfo[$campaignKey]['variationName']);
                         }else{
                             $this->addLog(Logger::ERROR, Constants::ERROR_MESSAGE['LOOK_UP_USER_PROFILE_SERVICE_FAILED']);
 
@@ -279,10 +280,10 @@ Class VWO
                 // do murmur operations and get Variation for the customer
                 if($bucketInfo==null) {
                     $bucketInfo=BucketService::getBucket($userId, $campaign, $this);
-                    $this->addLog(Logger::DEBUG, Constants::DEBUG_MESSAGES['NO_STORED_VARIATION'], ['{userId}'=>$userId,'{campaignTestKey}'=>$campaignName]);
+                    $this->addLog(Logger::DEBUG, Constants::DEBUG_MESSAGES['NO_STORED_VARIATION'], ['{userId}'=>$userId,'{campaignTestKey}'=>$campaignKey]);
                     try{
                         if(!empty($this->_userProfileObj)) {
-                            $campaignInfo=$this->getUserProfileSaveData($campaignName, $bucketInfo, $userId);
+                            $campaignInfo=$this->getUserProfileSaveData($campaignKey, $bucketInfo, $userId);
                             $this->_userProfileObj->save($campaignInfo);
                         }else{
                             $this->addLog(Logger::DEBUG, Constants::DEBUG_MESSAGES['NO_USER_PROFILE_SERVICE_SAVE']);
@@ -292,7 +293,7 @@ Class VWO
 
                     }
                 }else{
-                    $this->addLog(Logger::DEBUG, Constants::DEBUG_MESSAGES['GETTING_STORED_VARIATION'], ['{userId}'=>$userId,'{variationName}'=>$bucketInfo['name'],'{campaignTestKey}'=>$campaignName]);
+                    $this->addLog(Logger::DEBUG, Constants::DEBUG_MESSAGES['GETTING_STORED_VARIATION'], ['{userId}'=>$userId,'{variationName}'=>$bucketInfo['name'],'{campaignTestKey}'=>$campaignKey]);
                 }
                 if($addVisitor) {
                     $this->addVisitor($campaign, $userId, $bucketInfo['id']);
@@ -306,17 +307,17 @@ Class VWO
     }
 
     /**
-     * @param  $campaignName
+     * @param  $campaignKey
      * @return null
      */
-    private function validateCampaignName($campaignName)
+    private function validateCampaignName($campaignKey)
     {
         if(isset($this->settings['campaigns']) and count($this->settings['campaigns'])) {
             foreach ($this->settings['campaigns'] as $campaign) {
                 if(isset($campaign['status']) && $campaign['status'] !=='RUNNING') {
                     continue;
                 }
-                if ($campaignName === $campaign['key']) {
+                if ($campaignKey === $campaign['key']) {
                     return $campaign;
                 }
             }
@@ -351,11 +352,11 @@ Class VWO
 
     }
 
-    private function getUserProfileSaveData($campaignName,$bucketInfo,$customerHash)
+    private function getUserProfileSaveData($campaignKey,$bucketInfo,$customerHash)
     {
         return[
             'userId'=>$customerHash,
-            $campaignName=>['variationName'=>$bucketInfo['name']],
+            $campaignKey=>['variationName'=>$bucketInfo['name']],
         ];
 
     }
