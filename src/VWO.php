@@ -1,4 +1,10 @@
 <?php
+/**
+ *
+ *
+ *
+ */
+
 namespace vwo;
 use \Exception as Exception;
 use vwo\Logger\LoggerInterface;
@@ -14,43 +20,20 @@ use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
 /***
- * VWO sdk class
+ * VWO class for clients to connect the sdk
  *
  * Class VWO
  *
- * It helps in making client object and use the sdk
  * @package vwo
- * @author Gaurav Gupta
- * @version 1.0
- * @copyright never
  */
 Class VWO
 {
-    /**
-     * @var string to save uuid basic seed
-     */
     var $uuidSeed=Constants::UUID_SEED;
-    /**
-     * @var mixed|string to save settings
-     */
     var $settings='';
-    /**
-     * @var Connection to save connection object for curl requests
-     */
     var $connection;
-    /**
-     * @var mixed|null|LoggerInterface
-     * to save loggerinterface object
-     */
     static $_logger;
-    /**
-     * @var string to save userprofile interface object
-     */
     var $_userProfileObj;
-    /**
-     * @var int to save if dev mode is enabled or not
-     */
-    var $developmentMode;
+    var $development_mode;
 
 
     /**
@@ -62,6 +45,7 @@ Class VWO
     function __construct($config)
     {
         if (!is_array($config)) {
+           self::addLog(Logger::ERROR, Constants::ERROR_MESSAGE['INVALID_CONFIGURATION']);
             return (object)[];
         }
         // is settings and logger files are provided then set the values to the object
@@ -69,7 +53,7 @@ Class VWO
         $logger=isset($config['logger'])?$config['logger']:null;
 
         // dev mode enable wont send tracking hits to the servers
-        $this->developmentMode=(isset($config['developmentMode']) && $config['developmentMode']== 1)?1:0;
+        $this->development_mode=(isset($config['development_mode']) && $config['development_mode']== 1)?1:0;
 
         if ($logger== null) {
             self::$_logger = new DefaultLogger(Logger::DEBUG, '/var/log/php_errors.log'); //stdout
@@ -86,7 +70,7 @@ Class VWO
         }
 
         // initial logging started for each new object
-       self::addLog(Logger::DEBUG, Constants::DEBUG_MESSAGES['SET_DEVELOPMENT_MODE'], ['{devmode}'=>$this->developmentMode]);
+       self::addLog(Logger::DEBUG, Constants::DEBUG_MESSAGES['SET_DEVELOPMENT_MODE'], ['{devmode}'=>$this->development_mode]);
 
         $res=Validations::checkSettingSchema($settings);
         if($res) {
@@ -109,7 +93,7 @@ Class VWO
     /***
      * method to get the settings from the server
      *
-     * @param  $accountId
+     * @param  $account_id
      * @param  $sdk_key
      * @return bool|mixed
      */
@@ -133,7 +117,8 @@ Class VWO
     }
 
     /**
-     * set the ranges of all the campaigns
+     *
+     *
      */
     private function makeRanges()
     {
@@ -153,18 +138,6 @@ Class VWO
             throw new ExceptionaddLog('unable to fetch campaign data from settings in makeRanges function');
         }
     }
-
-
-    /***
-     *
-     * API for track the user goals and revenue
-     *
-     * @param string $campaignKey
-     * @param string $userId
-     * @param string $goalName
-     * @param string $revenue
-     * @return bool
-     */
     public function track($campaignKey='',$userId='',$goalName='',$revenue='')
     {
         try{
@@ -177,7 +150,7 @@ Class VWO
                 $bucketInfo=BucketService::getBucket($userId, $campaign);
                 $goalId=$this->getGoalId($campaign['goals'], $goalName);
                 if($goalId &&  isset($bucketInfo['id']) &&  $bucketInfo['id']>0) {
-                    if($this->developmentMode) {
+                    if($this->development_mode) {
                         $response['status']='success';
                     }else {
                         $parameters = array(
@@ -189,9 +162,11 @@ Class VWO
                             'random' => rand(0, 1),
                             'sId' => time(),
                             'u' => $this->getUUId5($userId, $this->settings['accountId']),
-                            'goal_id' => $goalId,
-                            'r'=>is_string($revenue) || is_float($revenue) || is_int($revenue)?$revenue:''
+                            'goal_id' => $goalId
                         );
+                        if(!empty($revenue) && (is_string($revenue) || is_float($revenue) || is_int($revenue))){
+                            $parameters['r']=$revenue;
+                        }
                         $response = $this->connection->get(Constants::GOAL_URL, $parameters);
                     }
                     if(isset($response['status'])  && $response['status'] == 'success') {
@@ -212,9 +187,6 @@ Class VWO
     }
 
     /**
-     *
-     * To fetch the goal id using goals array and goal identifier
-     *
      * @param  $goals
      * @param  $goalIdentifier
      * @return int
@@ -233,9 +205,6 @@ Class VWO
 
 
     /***
-     *
-     * API to send add visitor hit to vwo
-     *
      * @param  $campaign
      * @param  $customerHash
      * @return mixed
@@ -243,7 +212,7 @@ Class VWO
     private function addVisitor($campaign,$userId,$varientId)
     {
         try{
-            if($this->developmentMode) {
+            if($this->development_mode) {
                 $response['status']='success';
             }else {
                 $parameters=array(
@@ -274,12 +243,9 @@ Class VWO
     }
 
     /**
-     *
-     * to send variation name along with api hit to send add visitor hit
-     *
      * @param  $campaignKey
-     * @param  $userId
-     * @return string|null
+     * @param  $customerHash
+     * @return null
      */
     public function activate($campaignKey,$userId)
     {
@@ -287,12 +253,9 @@ Class VWO
     }
 
     /**
-     *
-     * fetch the variation name
-     *
      * @param  $campaignKey
      * @param  $customerHash
-     * @param  int $addVisitor
+     * @param  int          $addVisitor
      * @return null| bucketname
      */
     public function getVariation($campaignKey,$userId,$addVisitor=0)
@@ -350,10 +313,6 @@ Class VWO
     }
 
     /**
-     *
-     * function to check if the campaignkey exists in campign array from settings
-     *
-     *
      * @param  $campaignKey
      * @return null
      */
@@ -373,9 +332,6 @@ Class VWO
     }
 
     /**
-     *
-     * create a uuid
-     *
      * @param  $name
      * @return string
      */
@@ -412,9 +368,6 @@ Class VWO
     }
 
     /**
-     *
-     * function to addlog to the default/ custom logger
-     *
      * @param  $level
      * @param  $message
      * @param  array   $params
