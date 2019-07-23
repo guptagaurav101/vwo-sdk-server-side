@@ -1,15 +1,38 @@
 <?php
 
 namespace vwo\Utils;
+/***
+ * Class Constants
+ * All the constant variables are used from constant class
+ *
+ * @package vwo\Utils
+ */
 class Constants
 {
+    /**
+     * base url for api hit
+     */
     const BASE_URL = 'https://dev.visualwebsiteoptimizer.com/server-side/';
+    /**
+     * query string to fetch settings
+     */
     const SETTINGS_URL = self::BASE_URL . 'settings';
+    /**
+     * query string to track goal
+     */
     const GOAL_URL = self::BASE_URL . 'track-goal';
+    /**
+     * query string to track user
+     */
     const TRACK_URL = self::BASE_URL . 'track-user';
+    /**
+     * base seed for uuid
+     */
     const UUID_SEED='https://vwo.com';
 
-
+    /**
+     * messages used for dedug mode
+     */
     const DEBUG_MESSAGES = [
         'LOG_LEVEL_SET' => '({file}): Log level set to {level}',
         'SET_DEVELOPMENT_MODE' => '({file}): DEVELOPMENT mode is {devmode}',
@@ -31,6 +54,10 @@ class Constants
         'IMPRESSION_FOR_TRACK_GOAL' => '({file}): impression built for track-goal - {properties}'
     ];
 
+    /**
+     * messages used for info mode
+     */
+
     const INFO_MESSAGES = [
         'VARIATION_RANGE_ALLOCATION' => '({file}): Campaign:{campaignTestKey} having variations:{variationName} with weight:{variationWeight} got range as: ( {start} - {end} ))',
         'VARIATION_ALLOCATED' => '({file}): UserId:{userId} of Campaign:{campaignTestKey} got variation: {variationName}',
@@ -45,7 +72,13 @@ class Constants
         'IMPRESSION_SUCCESS' => '({file}): Event sent to VWO - {endPoint} having main keys: accountId:{accountId}, userId:{userId}, campaignId:{campaignId} and vairationId:{variationId}',
         'INVALID_VARIATION_KEY' => '({file}): Variation was not assigned to userId:{userId} for campaign:{campaignTestKey}'
     ];
+    /**
+     * messages used for warning mode
+     */
     const WARNING_MESSAGES = [];
+    /**
+     * messages used for error mode
+     */
     const ERROR_MESSAGE = [
         'INVALID_CONFIGURATION' => '({file}): SDK configuration or account settings or both is/are not valid.',
         'SETTINGS_FILE_CORRUPTED' => '({file}): Settings file is corrupted. Please contact VWO Support for help.',

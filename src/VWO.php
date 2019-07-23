@@ -2,7 +2,7 @@
 /**
  *
  *
- * @noinspection PhpUndefinedClassInspection
+ *
  */
 
 namespace vwo;

@@ -2,12 +2,19 @@
 namespace vwo;
 include_once '/Applications/MAMP/htdocs/vwo/VWO/autoload.php';
 use PHPUnit\Framework\TestCase;
+
+/***
+ * Class VWOTest
+ * @package vwo
+ */
 final class VWOTest extends TestCase
 {
 
     private $vwotest;
 
-
+    /**
+     *
+     */
     public function testTrackOnSuccess()
     {
         $this->vwotest = new VWO('60781','ea87170ad94079aa190bc7c9b85d26fb');
