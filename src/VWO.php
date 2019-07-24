@@ -153,6 +153,7 @@ Class VWO
                 if($goalId &&  isset($bucketInfo['id']) &&  $bucketInfo['id']>0) {
                     if($this->development_mode) {
                         $response['status']='success';
+                        return TRUE;
                     }else {
                         $parameters = array(
                             'account_id' => $this->settings['accountId'],
@@ -217,6 +218,7 @@ Class VWO
         try{
             if($this->development_mode) {
                 $response['status']='success';
+                return TRUE;
             }else {
                 $parameters=array(
                     'account_id'=>$this->settings['accountId'],
