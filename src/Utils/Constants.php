@@ -70,7 +70,8 @@ class Constants
         'GOT_VARIATION_FOR_USER' => '({file}): userId:{userId} for campaign:{campaignTestKey} got variationName:{variationName}',
         'USER_GOT_NO_VARIATION' => '({file}): userId:{userId} for campaign:{campaignTestKey} did not allot any variation',
         'IMPRESSION_SUCCESS' => '({file}): Event sent to VWO - {endPoint} having main keys: accountId:{accountId}, userId:{userId}, campaignId:{campaignId} and vairationId:{variationId}',
-        'INVALID_VARIATION_KEY' => '({file}): Variation was not assigned to userId:{userId} for campaign:{campaignTestKey}'
+        'INVALID_VARIATION_KEY' => '({file}): Variation was not assigned to userId:{userId} for campaign:{campaignTestKey}',
+        'API_CALLED'=>'({file}): API: {api} called for userid : {userId}'
     ];
     /**
      * messages used for warning mode
@@ -90,7 +91,7 @@ class Constants
         'TRACK_API_CONFIG_CORRUPTED' => '({file}): "track" API has corrupted configuration',
         'TRACK_API_GOAL_NOT_FOUND' => '({file}): Goal not found for campaign:{campaignTestKey} and userId:{userId}',
         'TRACK_API_VARIATION_NOT_FOUND' => '({file}): Variation not found for campaign:{campaignTestKey} and userId:{userId}',
-        'CAMPAIGN_NOT_RUNNING' => '({file}): API used:{api} - Campaign:{campaignTestKey} is not RUNNING. Please verify from VWO App',
+        'CAMPAIGN_NOT_RUNNING' => '({file}): Campaign:{campaignTestKey} is not RUNNING. Please verify from VWO App',
         'LOOK_UP_USER_PROFILE_SERVICE_FAILED' => '({file}): Looking data from UserProfileService failed for userId:{userId}',
         'SAVE_USER_PROFILE_SERVICE_FAILED' => '({file}): Saving data into UserProfileService failed for userId:{userId}',
         'INVALID_CAMPAIGN' => '({file}): Invalid campaign passed to {method} of this file',

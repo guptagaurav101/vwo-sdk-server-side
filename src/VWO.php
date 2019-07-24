@@ -53,7 +53,7 @@ Class VWO
         $logger=isset($config['logger'])?$config['logger']:null;
 
         // dev mode enable wont send tracking hits to the servers
-        $this->development_mode=(isset($config['development_mode']) && $config['development_mode']== 1)?1:0;
+        $this->development_mode=(isset($config['isDevelopmentMode']) && $config['isDevelopmentMode']== 1)?1:0;
 
         if ($logger== null) {
             self::$_logger = new DefaultLogger(Logger::DEBUG, '/var/log/php_errors.log'); //stdout
@@ -141,6 +141,7 @@ Class VWO
     public function track($campaignKey='',$userId='',$goalName='',$revenue='')
     {
         try{
+            self::addLog(Logger::INFO, Constants::INFO_MESSAGES['API_CALLED'], ['{api}'=>'track','{userId}'=>$userId]);
             if(empty($campaignKey)||empty($userId)||empty($goalName)) {
                self::addLog(Logger::ERROR, Constants::ERROR_MESSAGE['TRACK_API_MISSING_PARAMS']);
                 return FALSE;
@@ -265,6 +266,11 @@ Class VWO
      */
     public function getVariation($campaignKey,$userId,$addVisitor=0)
     {
+        if($addVisitor==0){
+            self::addLog(Logger::INFO, Constants::INFO_MESSAGES['API_CALLED'], ['{api}'=>'getVariation','{userId}'=>$userId]);
+        }else{
+            self::addLog(Logger::INFO, Constants::INFO_MESSAGES['API_CALLED'], ['{api}'=>'activate','{userId}'=>$userId]);
+        }
         $bucketInfo=null;
         try{
             // if campai
@@ -333,7 +339,7 @@ Class VWO
                 }
             }
         }
-        self::addLog(Logger::ERROR, Constants::ERROR_MESSAGE['CAMPAIGN_NOT_RUNNING'], ['{api}'=>'getVariantion','{campaignTestKey}'=>$campaignKey]);
+        self::addLog(Logger::ERROR, Constants::ERROR_MESSAGE['CAMPAIGN_NOT_RUNNING'], ['{campaignTestKey}'=>$campaignKey]);
         return null ;
     }
 
