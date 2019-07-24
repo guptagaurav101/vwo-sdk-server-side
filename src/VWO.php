@@ -333,6 +333,7 @@ Class VWO
                 }
             }
         }
+        self::addLog(Logger::ERROR, Constants::ERROR_MESSAGE['CAMPAIGN_NOT_RUNNING'], ['{api}'=>'getVariantion','{campaignTestKey}'=>$campaignKey]);
         return null ;
     }
 
