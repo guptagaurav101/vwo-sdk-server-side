@@ -138,6 +138,7 @@ Class VWO
     public function track($campaignKey='',$userId='',$goalName='',$revenue='')
     {
         try{
+            $bucketInfo=null;
             self::addLog(Logger::INFO, Constants::INFO_MESSAGES['API_CALLED'], ['{api}'=>'track','{userId}'=>$userId]);
             if(empty($campaignKey)||empty($userId)||empty($goalName)) {
                self::addLog(Logger::ERROR, Constants::ERROR_MESSAGE['TRACK_API_MISSING_PARAMS']);
