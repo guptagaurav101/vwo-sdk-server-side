@@ -116,10 +116,7 @@ Class VWO
 
     }
 
-    /**
-     *
-     *
-     */
+
     private function makeRanges()
     {
         if (isset($this->settings['campaigns']) && count($this->settings['campaigns'])) {
@@ -148,7 +145,41 @@ Class VWO
             }
             $campaign=$this->validateCampaignName($campaignKey);
             if($campaign!==null) {
-                $bucketInfo=BucketService::getBucket($userId, $campaign);
+
+
+                try{
+                    if(!empty($this->_userProfileObj)) {
+                        $variationInfo=$this->_userProfileObj->lookup($userId, $campaignKey);
+                        if(isset($variationInfo[$campaignKey]['variationName']) && is_string($variationInfo[$campaignKey]['variationName'])&& !empty($variationInfo[$campaignKey]['variationName']) ) {
+                            self::addLog(Logger::INFO, Constants::INFO_MESSAGES['LOOKING_UP_USER_PROFILE_SERVICE'],['{userId}'=>$userId]);
+                            $bucketInfo=BucketService::getBucketVariationId($campaign, $variationInfo[$campaignKey]['variationName']);
+                        }else{
+                            self::addLog(Logger::ERROR, Constants::ERROR_MESSAGE['LOOK_UP_USER_PROFILE_SERVICE_FAILED']);
+
+                        }
+                    }else{
+                        self::addLog(Logger::DEBUG, Constants::DEBUG_MESSAGES['NO_USER_PROFILE_SERVICE_LOOKUP']);
+                    }
+                }catch (Exception $e) {
+                    self::addLog(Logger::ERROR, $e->getMessage());
+                }
+                if($bucketInfo==null) {
+                    $bucketInfo=BucketService::getBucket($userId, $campaign);
+                    self::addLog(Logger::DEBUG, Constants::DEBUG_MESSAGES['NO_STORED_VARIATION'], ['{userId}'=>$userId,'{campaignTestKey}'=>$campaignKey]);
+                    try{
+                        if(!empty($this->_userProfileObj)) {
+                            $campaignInfo=$this->getUserProfileSaveData($campaignKey, $bucketInfo, $userId);
+                            $this->_userProfileObj->save($campaignInfo);
+                        }else{
+                            self::addLog(Logger::DEBUG, Constants::DEBUG_MESSAGES['NO_USER_PROFILE_SERVICE_SAVE']);
+                        }
+                    }catch (Exception $e){
+                        self::addLog(Logger::ERROR, $e->getMessage());
+
+                    }
+                }else{
+                    self::addLog(Logger::DEBUG, Constants::DEBUG_MESSAGES['GETTING_STORED_VARIATION'], ['{userId}'=>$userId,'{variationName}'=>$bucketInfo['name'],'{campaignTestKey}'=>$campaignKey]);
+                }
                 $goalId=$this->getGoalId($campaign['goals'], $goalName);
                 if($goalId &&  isset($bucketInfo['id']) &&  $bucketInfo['id']>0) {
                     if($this->development_mode) {
@@ -283,7 +314,7 @@ Class VWO
                     if(!empty($this->_userProfileObj)) {
                         $variationInfo=$this->_userProfileObj->lookup($userId, $campaignKey);
                         if(isset($variationInfo[$campaignKey]['variationName']) && is_string($variationInfo[$campaignKey]['variationName'])&& !empty($variationInfo[$campaignKey]['variationName']) ) {
-                           self::addLog(Logger::INFO, Constants::INFO_MESSAGES['LOOKING_UP_USER_PROFILE_SERVICE']);
+                           self::addLog(Logger::INFO, Constants::INFO_MESSAGES['LOOKING_UP_USER_PROFILE_SERVICE'],['{userId}'=>$userId]);
                             $bucketInfo=BucketService::getBucketVariationId($campaign, $variationInfo[$campaignKey]['variationName']);
                         }else{
                            self::addLog(Logger::ERROR, Constants::ERROR_MESSAGE['LOOK_UP_USER_PROFILE_SERVICE_FAILED']);
