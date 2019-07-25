@@ -138,14 +138,14 @@ Class BucketService{
         // if bucketing to be done
         $bucketVal= self::getBucketVal($userId,self::$MAX_CAMPAIGN_TRAFFIC);
         if(!self::isUserPartofCampaign($bucketVal,$campaign['percentTraffic'])){
-            VWO::addLog(Logger::ERROR,Constants::DEBUG_MESSAGES['USER_NOT_PART_OF_CAMPAIGN'],['{userId}'=>$userId,'{method}'=>'getBucket','{campaignTestKey}'=>$campaign['key']],self::$CLASSNAME);
+            VWO::addLog(Logger::DEBUG,Constants::DEBUG_MESSAGES['USER_NOT_PART_OF_CAMPAIGN'],['{userId}'=>$userId,'{method}'=>'getBucket','{campaignTestKey}'=>$campaign['key']],self::$CLASSNAME);
             return null;
         }
         $multiplier=self::getMultiplier($campaign['percentTraffic']);
         $rangeForVariations=self::getRangeForVariations($bucketVal,$multiplier);
         foreach ( $campaign['variations'] as $variation ) {
             if($variation['max_range']>=$rangeForVariations && $rangeForVariations>=$variation['min_range']){
-                VWO::addLog(Logger::ERROR,Constants::INFO_MESSAGES['GOT_VARIATION_FOR_USER'],['{variationName}'=>$variation['name'],'{userId}'=>$userId,'{method}'=>'getBucket','{campaignTestKey}'=>$campaign['key']],self::$CLASSNAME);
+                VWO::addLog(Logger::INFO,Constants::INFO_MESSAGES['GOT_VARIATION_FOR_USER'],['{variationName}'=>$variation['name'],'{userId}'=>$userId,'{method}'=>'getBucket','{campaignTestKey}'=>$campaign['key']],self::$CLASSNAME);
                 return $variatInfo=['name'=>$variation['name'],'id'=>$variation['id']];
             }
         }

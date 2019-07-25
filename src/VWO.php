@@ -166,6 +166,9 @@ Class VWO
                 }
                 if($bucketInfo==null) {
                     $bucketInfo=BucketService::getBucket($userId, $campaign);
+                    if($bucketInfo==null){
+                        return null;
+                    }
                     self::addLog(Logger::DEBUG, Constants::DEBUG_MESSAGES['NO_STORED_VARIATION'], ['{userId}'=>$userId,'{campaignTestKey}'=>$campaignKey]);
                     try{
                         if(!empty($this->_userProfileObj)) {
@@ -205,7 +208,7 @@ Class VWO
                     }
                     self::addLog(Logger::INFO, Constants::INFO_MESSAGES['IMPRESSION_FOR_TRACK_GOAL'], ['{properties}'=>json_encode($parameters)]);
                     if(isset($response['status'])  && $response['status'] == 'success') {
-                       self::addLog(Logger::INFO, Constants::INFO_MESSAGES['IMPRESSION_SUCCESS'], ['{endPoint}'=>'track-goal','{campaignId}'=>$campaign['id'],'{variationId}'=>$bucketInfo['id'],'{accountId}'=>$this->settings['accountId']]);
+                       self::addLog(Logger::INFO, Constants::INFO_MESSAGES['IMPRESSION_SUCCESS'], ['{userId}'=>$userId,'{endPoint}'=>'track-goal','{campaignId}'=>$campaign['id'],'{variationId}'=>$bucketInfo['id'],'{accountId}'=>$this->settings['accountId']]);
                        return TRUE;
 
                     }
@@ -269,7 +272,7 @@ Class VWO
             self::addLog(Logger::INFO, Constants::INFO_MESSAGES['IMPRESSION_FOR_TRACK_USER'], ['{properties}'=>json_encode($parameters)]);
 
             if(isset($response['status'])  && $response['status'] == 'success') {
-                self::addLog(Logger::INFO, Constants::INFO_MESSAGES['IMPRESSION_SUCCESS'], ['{endPoint}'=>'track-user','{campaignId}'=>$campaign['id'],'{variationId}'=>$varientId,'{accountId}'=>$this->settings['accountId']]);
+                self::addLog(Logger::INFO, Constants::INFO_MESSAGES['IMPRESSION_SUCCESS'], ['{userId}'=>$userId,'{endPoint}'=>'track-user','{campaignId}'=>$campaign['id'],'{variationId}'=>$varientId,'{accountId}'=>$this->settings['accountId']]);
 
                 return TRUE;
             }
@@ -331,6 +334,9 @@ Class VWO
                 // do murmur operations and get Variation for the customer
                 if($bucketInfo==null) {
                     $bucketInfo=BucketService::getBucket($userId, $campaign);
+                    if($bucketInfo==null){
+                        return null;
+                    }
                    self::addLog(Logger::DEBUG, Constants::DEBUG_MESSAGES['NO_STORED_VARIATION'], ['{userId}'=>$userId,'{campaignTestKey}'=>$campaignKey]);
                     try{
                         if(!empty($this->_userProfileObj)) {
