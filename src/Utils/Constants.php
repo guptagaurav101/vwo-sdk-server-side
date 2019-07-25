@@ -50,8 +50,7 @@ class Constants
         'GOT_VARIATION_FOR_USER' => '({file}): userId:{userId} for campaign:{campaignTestKey} got variationName:{variationName} inside method:{method}',
         'USER_NOT_PART_OF_CAMPAIGN' => '({file}): userId:{userId} for campaign:{campaignTestKey} did not become part of campaign, method:{method}',
         'UUID_FOR_USER' => '({file}): Uuid generated for userId:{userid} and accountId:{accountId} is {desiredUuid}',
-        'IMPRESSION_FOR_TRACK_USER' => '({file}): impression built for track-user - {properties}',
-        'IMPRESSION_FOR_TRACK_GOAL' => '({file}): impression built for track-goal - {properties}'
+
     ];
 
     /**
@@ -71,7 +70,9 @@ class Constants
         'USER_GOT_NO_VARIATION' => '({file}): userId:{userId} for campaign:{campaignTestKey} did not allot any variation',
         'IMPRESSION_SUCCESS' => '({file}): Event sent to VWO - {endPoint} having main keys: accountId:{accountId}, userId:{userId}, campaignId:{campaignId} and vairationId:{variationId}',
         'INVALID_VARIATION_KEY' => '({file}): Variation was not assigned to userId:{userId} for campaign:{campaignTestKey}',
-        'API_CALLED'=>'({file}): API: {api} called for userid : {userId}'
+        'API_CALLED'=>'({file}): API: {api} called for userid : {userId}',
+        'IMPRESSION_FOR_TRACK_USER' => '({file}): impression built for track-user - {properties}',
+        'IMPRESSION_FOR_TRACK_GOAL' => '({file}): impression built for track-goal - {properties}'
     ];
     /**
      * messages used for warning mode

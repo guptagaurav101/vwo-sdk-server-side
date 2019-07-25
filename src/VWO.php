@@ -202,9 +202,9 @@ Class VWO
                         }
                         $response = $this->connection->get(Constants::GOAL_URL, $parameters);
                     }
-                    self::addLog(Logger::ERROR, Constants::DEBUG_MESSAGES['IMPRESSION_FOR_TRACK_GOAL'], ['{properties}'=>json_encode($parameters)]);
+                    self::addLog(Logger::INFO, Constants::INFO_MESSAGES['IMPRESSION_FOR_TRACK_GOAL'], ['{properties}'=>json_encode($parameters)]);
                     if(isset($response['status'])  && $response['status'] == 'success') {
-                       self::addLog(Logger::ERROR, Constants::INFO_MESSAGES['IMPRESSION_SUCCESS'], ['{endPoint}'=>'track-goal','{campaignId}'=>$campaign['id'],'{variationId}'=>$bucketInfo['id'],'{accountId}'=>$this->settings['accountId']]);
+                       self::addLog(Logger::INFO, Constants::INFO_MESSAGES['IMPRESSION_SUCCESS'], ['{endPoint}'=>'track-goal','{campaignId}'=>$campaign['id'],'{variationId}'=>$bucketInfo['id'],'{accountId}'=>$this->settings['accountId']]);
                        return TRUE;
 
                     }
@@ -265,10 +265,10 @@ Class VWO
 
                 $response = $this->connection->get(Constants::TRACK_URL, $parameters);
             }
-            self::addLog(Logger::ERROR, Constants::DEBUG_MESSAGES['IMPRESSION_FOR_TRACK_USER'], ['{properties}'=>json_encode($parameters)]);
+            self::addLog(Logger::INFO, Constants::INFO_MESSAGES['IMPRESSION_FOR_TRACK_USER'], ['{properties}'=>json_encode($parameters)]);
 
             if(isset($response['status'])  && $response['status'] == 'success') {
-                self::addLog(Logger::ERROR, Constants::INFO_MESSAGES['IMPRESSION_SUCCESS'], ['{endPoint}'=>'track-user','{campaignId}'=>$campaign['id'],'{variationId}'=>$varientId,'{accountId}'=>$this->settings['accountId']]);
+                self::addLog(Logger::INFO, Constants::INFO_MESSAGES['IMPRESSION_SUCCESS'], ['{endPoint}'=>'track-user','{campaignId}'=>$campaign['id'],'{variationId}'=>$varientId,'{accountId}'=>$this->settings['accountId']]);
 
                 return TRUE;
             }
