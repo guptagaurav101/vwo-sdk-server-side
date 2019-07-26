@@ -125,10 +125,47 @@ Class CustomLogger implements LoggerInterface{
     }
 
 }
+```
 
+## Code Snippets
+Use the code below to fetch settings 
+```code 
+// to fetch the settings i.e campaigns, variations and goals 
+$settings=VWO::getSettings($account_id,$sdk_key);
+```
+Use the code below to create a vwo instance 
+```code 
+$config=['settings'=>$settings,
+    'isDevelopmentMode'=>0,  // optional: 1 to enable the dev mode 
+    'logger'=>new CustomLogger(), // optional 
+    'userProfileService'=> new userProfile() // optional
+];
 
+$vwoClient = new VWO($config);
 
 ```
+Use the code below to both activate campaign for a user and fetch variation name 
+```code 
+// to get the variation name along with add a visitor hit to vwo app stats 
+$varient=$vwoClient->activate($campaignKey,$userId);
+```
+
+Use the code below to get variation name 
+```code 
+// to get the variation name along with add a visitor hit to vwo app stats 
+$varient=$vwoClient->getVariation($campaignKey,$userId);
+```
+
+Use the code below to track
+```code 
+/**
+*send the track api hit to the vwo app stats to increase conversions
+* $revenue is optional send in case if there is any revenue 
+*/
+
+$vwoClient->track($campaignKey,$userId,$goalIdentifier,$revenue);
+```
+
 
 ## Documentation
 
