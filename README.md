@@ -52,6 +52,69 @@ $vwoClient->track($campaignKey,$userId,$goalIdentifier,$revenue);
 
 ```
 
+Code for UserProfile service 
+```text
+<?php
+require_once('vendor/autoload.php');
+use vwo\Utils\UserProfileInterface;
+Class UserProfile implements UserProfileInterface{
+
+    /**
+     * @param $userId
+     * @param $campaignName
+     * @return string
+     */
+    public function lookup($userId,$campaignName){
+        // xyz actions     
+       return[
+            'userId'=>$userId,
+            $campaignName=>['variationName'=>'Control']
+        ];
+
+    }
+
+    /**
+     * @param $campaignInfo
+     * @return bool
+     */
+    public function save($campaignInfo){
+       // print_r($campaignInfo);
+        return True;
+
+    }
+
+}
+```
+
+Code for customLogger file 
+```text
+<?php
+require_once('vendor/autoload.php');
+use vwo\Logger\LoggerInterface;
+
+/**
+ * Class CustomLogger
+ */
+Class CustomLogger implements LoggerInterface{
+
+    /**
+     * @param $message
+     * @param $level
+     * @return string
+     */
+    public function addLog($message,$level){
+        //do code for writing logs to your files/databases
+        //throw new Exception('my test');
+        //return $x;
+
+    }
+
+}
+
+
+
+```
+
 ## Documentation
 
 Refer [Official VWO Documentation](https://developers.vwo.com/reference#server-side-introduction)
@@ -88,6 +151,3 @@ Refer [Official VWO Documentation](https://developers.vwo.com/reference#server-s
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
 ```
-
-
-Code: 
