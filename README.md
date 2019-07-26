@@ -19,12 +19,22 @@ $ composer require vwo/vwo
 Use the below code for inital setup.
 ```text
 <?php
+
 require_once('vendor/autoload.php');
 require_once('userProfile.php'); // Optional :if you are using userProfile service feature
 require_once('customLogger.php');// Optional :if you are using custom logging feature
+
+
 use vwo\VWO;
+
+
 $account_id=123456;
 $sdk_key='loremipsum1234567890';
+$campaignKey='LOREM_IPSUM';
+$userId='Test';
+$goalIdentifier='LOREM';
+
+
 // to fetch the settings i.e campaigns, variations and goals 
 $settings=VWO::getSettings($account_id,$sdk_key);
 $config=['settings'=>$settings,
@@ -34,20 +44,25 @@ $config=['settings'=>$settings,
 ];
 
 $vwoClient = new VWO($config);
-$campaignKey='LOREM_IPSUM';
-$userId='Test';
-$goalIdentifier='LOREM';
+
 // to get the variation name along with add a visitor hit to vwo app stats 
 $varient=$vwoClient->activate($campaignKey,$userId);
+
+
 // to get the variation name 
 $varient=$vwoClient->getVariation($campaignKey,$userId);
+
+
 // add code here to use variation 
 //...
+
+
 
 /**
 *send the track api hit to the vwo app stats to increase conversions
 * $revenue is optional send in case if there is any revenue 
 */
+
 $vwoClient->track($campaignKey,$userId,$goalIdentifier,$revenue);
 
 ```
