@@ -7,7 +7,7 @@ One can also send the goal track data to vwo app to check the conversions on the
 
 
 ## Requirements
-* Node 5.6 or later
+* PHP 5.6 or later
 
 ## Installation
 Install the latest version with
