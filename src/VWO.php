@@ -20,19 +20,43 @@ use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
 /***
- * VWO class for clients to connect the sdk
+ * VWO sdk class
  *
  * Class VWO
  *
+ * It helps in making client object and use the sdk
  * @package vwo
+ * @author Gaurav Gupta
+ * @version 1.0
+ * @copyright never
  */
 Class VWO
 {
+    /**
+     * @var string to save uuid basic seed
+     */
     var $uuidSeed=Constants::UUID_SEED;
+    /**
+     * @var mixed|string to save settings
+     */
     var $settings='';
+    /**
+     * @var Connection to save connection object for curl requests
+     */
     var $connection;
+    /**
+     * @var mixed|null|LoggerInterface
+     * to save loggerinterface object
+     */
     static $_logger;
+    /**
+     * @var string to save userprofile interface object
+     */
+
     var $_userProfileObj;
+    /**
+     * @var int to save if dev mode is enabled or not
+     */
     var $development_mode;
 
 
@@ -94,7 +118,7 @@ Class VWO
      * method to get the settings from the server
      *
      * @param  $account_id
-     * @param  $sdk_key
+     * @param  $sdkKey
      * @return bool|mixed
      */
     public static function getSettings($accountId,$sdkKey)
@@ -116,7 +140,9 @@ Class VWO
 
     }
 
-
+    /**
+     * set the ranges of all the campaigns
+     */
     private function makeRanges()
     {
         if (isset($this->settings['campaigns']) && count($this->settings['campaigns'])) {
@@ -135,6 +161,17 @@ Class VWO
             throw new ExceptionaddLog('unable to fetch campaign data from settings in makeRanges function');
         }
     }
+
+    /***
+     *
+     * API for track the user goals and revenue
+     *
+     * @param string $campaignKey
+     * @param string $userId
+     * @param string $goalName
+     * @param string $revenue
+     * @return bool
+     */
     public function track($campaignKey='',$userId='',$goalName='',$revenue='')
     {
         try{
@@ -226,6 +263,9 @@ Class VWO
     }
 
     /**
+     *
+     * To fetch the goal id using goals array and goal identifier
+     *
      * @param  $goals
      * @param  $goalIdentifier
      * @return int
@@ -244,6 +284,9 @@ Class VWO
 
 
     /***
+     *
+     * API to send add visitor hit to vwo
+     *
      * @param  $campaign
      * @param  $customerHash
      * @return mixed
@@ -286,9 +329,12 @@ Class VWO
     }
 
     /**
+     *
+     * to send variation name along with api hit to send add visitor hit
+     *
      * @param  $campaignKey
-     * @param  $customerHash
-     * @return null
+     * @param  $userId
+     * @return string|null
      */
     public function activate($campaignKey,$userId)
     {
@@ -296,9 +342,12 @@ Class VWO
     }
 
     /**
+     *
+     * fetch the variation name
+     *
      * @param  $campaignKey
      * @param  $customerHash
-     * @param  int          $addVisitor
+     * @param  int $addVisitor
      * @return null| bucketname
      */
     public function getVariation($campaignKey,$userId,$addVisitor=0)
@@ -364,6 +413,10 @@ Class VWO
     }
 
     /**
+     *
+     * function to check if the campaignkey exists in campign array from settings
+     *
+     *
      * @param  $campaignKey
      * @return null
      */
@@ -384,6 +437,9 @@ Class VWO
     }
 
     /**
+     *
+     * create a uuid
+     *
      * @param  $name
      * @return string
      */
@@ -407,8 +463,17 @@ Class VWO
 
         }
         return '';
-
     }
+
+    /**
+     *
+     * method to create the input array for userprofile save function
+     *
+     * @param $campaignKey
+     * @param $bucketInfo
+     * @param $customerHash
+     * @return array
+     */
 
     private function getUserProfileSaveData($campaignKey,$bucketInfo,$customerHash)
     {
@@ -416,10 +481,12 @@ Class VWO
             'userId'=>$customerHash,
             $campaignKey=>['variationName'=>$bucketInfo['name']],
         ];
-
     }
 
     /**
+     *
+     * function to addlog to the default/ custom logger
+     *
      * @param  $level
      * @param  $message
      * @param  array   $params
@@ -438,7 +505,5 @@ Class VWO
             error_log($e->getMessage());
         }
         return TRUE;
-
     }
-
 }
