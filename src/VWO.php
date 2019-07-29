@@ -21,7 +21,6 @@ use vwo\Utils\Validations as Validations;
 use vwo\Utils\Constants as Constants;
 use vwo\Utils\Common as Common;
 use vwo\Logger\DefaultLogger as DefaultLogger;
-use vwo\Logger\Loggers as Loggers;
 use Monolog\Logger as Logger;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
@@ -178,7 +177,7 @@ Class VWO
                 return false;
             }
             $campaign = $this->validateCampaignName($campaignKey);
-            if($campaign! ==null) {
+            if($campaign!==null) {
 
 
                 try{
