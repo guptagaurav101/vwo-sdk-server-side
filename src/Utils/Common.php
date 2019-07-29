@@ -2,7 +2,7 @@
 namespace vwo\Utils;
 /***
  *
- * All the common function will be invoked from commoin  class
+ * All the common function will be invoked from common  class
  *
  * Class Common
  * @package vwo\Utils
@@ -19,8 +19,8 @@ class Common {
      * @return mixed
      */
 
-    public static function makelogMesaage($message,$params,$className){
-        $params['{file}']=$className;
+    public static function makelogMessage($message,$params,$className){
+        $params['{file}'] = $className;
         $response = str_replace(array_keys($params), array_values($params), $message);
         return $response;
 
